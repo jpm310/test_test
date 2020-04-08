@@ -25,15 +25,34 @@ class AreaMasterController extends Controller
   {
     if (!empty(Session::get("area_lists"))) {
       $area_lists = Session::get('area_lists', array());
-      $nendo=$area_lists[0]["nendo"];
-      return view("area_master.list", compact('area_lists',"nendo"));
+      $nendo = $area_lists[0]["nendo"];
+      $kai = $area_lists[0]["kai"];
+      return view("area_master.list", compact('area_lists', "nendo", "kai"));
     }
     $area_lists = $this->sint1003->getData();
     Session::put('area_lists', $area_lists);
-    $nendo=$area_lists[0]["nendo"];
-    return view("area_master.list", compact('area_lists',"nendo"));
+    $nendo = $area_lists[0]["nendo"];
+    $kai = $area_lists[0]["kai"];
+
+    return view("area_master.list", compact('area_lists', "nendo", "kai"));
   }
-  
+
+  public function showListSearchForm(SearchAreaRequest $request)
+  {
+    $nendo = $request->nendo;
+    $kai = $request->kai;
+    $area01 = $request->area01;
+    $search=$request->search;
+// dd($area01);
+// dd($kai);
+// dd($area01);
+// dd($request["search"]);
+    $area_lists = Session::get('area_lists', array());
+    $search_lists = $this->sint1003->getSearchData($nendo, $kai, $area01);
+// dd($search);
+    dd($search_lists);
+    return view("area_master.list_search_aft", compact("search_lists", "nendo", "kai", "area01", "area_lists","search"));
+  }
 
   public function showListSearch2Form(SearchAreaRequest $request)
   {
